@@ -1,0 +1,31 @@
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  labels:
+    app: fsdatasets
+    release: fsdatasets
+  name: fsdatasets-mtg-sb-upf-edu
+  namespace: mtg-fsdatasets
+spec:
+  gateways:
+  - fsdatasets-mtg-fsdatasets
+  hosts:
+  - fsdatasets.mtg.sb.upf.edu
+  - fsannotator.mtg.sb.upf.edu
+  - annotator.freesound.org
+  - datasets.freesound.org
+  http:
+  - match:
+    - authority:
+        exact: datasets.freesound.org
+    redirect:
+      authority: annotator.freesound.org
+  - match:
+    - uri:
+        prefix: /
+    route:
+    - destination:
+        host: nginx
+        port:
+          number: 80
+      weight: 100

@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: freesound-dataset
+data:
+  DEPLOY_ENV: prod
+  DJANGO_BASE_URL: https://datasets.freesound.org
+  DJANGO_DATABASE_URL: xxxxx
+  DJANGO_SECRET_KEY: yyyyy
+  DATASET_RELEASE_FILES_FOLDER: /fsdatasets_releases/
+  CELERY_CONCURRENCY: "4"
+  SENTRY_DSN: https://08603d664bb34424bd793e76af2134a8@logserver.mtg.upf.edu/16

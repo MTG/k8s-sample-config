@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: celery-beat
+  namespace: mtg-fsdatasets
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: celery-beat
+  template:
+    metadata:
+      labels:
+        app: celery-beat
+    spec:
+      containers:
+        - args:
+            - dumb-init
+            - celery
+            - beat
+            - -A
+            - freesound_datasets
+          envFrom:
+            - configMapRef:
+                name: freesound-dataset
+          name: celery-beat
+          image: registry.sb.upf.edu/mtg/freesound-datasets-web
+          imagePullPolicy: Always
+          resources:
+            requests:
+              memory: "100Mi"
+              cpu: "100m"
+            limits:
+              memory: "1000Mi"
+              cpu: "400m"
+      restartPolicy: Always
+      imagePullSecrets:
+        - name: fsdatasets-registry

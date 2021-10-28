@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web
+  namespace: mtg-fsdatasets
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: web
+  template:
+    metadata:
+      labels:
+        app: web
+    spec:
+      containers:
+        - args:
+            - dumb-init
+            - uwsgi
+            - --die-on-term
+            - uwsgi.ini
+          envFrom:
+            - configMapRef:
+                name: freesound-dataset
+          name: web
+          image: registry.sb.upf.edu/mtg/freesound-datasets-web
+          imagePullPolicy: Always
+          resources:
+            requests:
+              memory: "1000Mi"
+              cpu: "400m"
+            limits:
+              memory: "1000Mi"
+              cpu: "400m"
+          volumeMounts:
+            - mountPath: /static
+              name: fsdatasets-static
+            - mountPath: /code/freesound_datasets/local_settings.py
+              name: local-settings
+              subPath: local_settings.py
+      restartPolicy: Always
+      volumes:
+        - name: fsdatasets-static
+          persistentVolumeClaim:
+            claimName: fsdatasets-static
+        - name: local-settings
+          configMap:
+            name: local-settings
+      imagePullSecrets:
+        - name: fsdatasets-registry

@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: fsdatasets-static
+  namespace: mtg-fsdatasets
+spec:
+  volumeName: fsdatasets-static
+  accessModes:
+    - ReadWriteMany
+  nfs:
+    path: /MTG/asplab-web/asplab-shared/freesound-datasets/static
+    server: 10.80.110.223
